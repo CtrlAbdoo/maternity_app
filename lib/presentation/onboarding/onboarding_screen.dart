@@ -20,12 +20,13 @@ class OnboardingScreen extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           children: [
             OnboardingPage(
-              title: 'Welcome to Mamativity',
+              title: 'Welcome to\nMamativity',
               description:
-              'The perfect app to support your journey through motherhood, from pregnancy to parenting.',
+              'The perfect app to support your\njourney through motherhood,\nfrom pregnancy to\nparenting.',
               imagePath: 'assets/images/mother_with_baby1.png',
               buttonText: 'Continue',
-              isLast: false,
+              currentIndex: 0,
+              totalPages: 3,
               onButtonPressed: () {
                 pageController.nextPage(
                   duration: const Duration(milliseconds: 300),
@@ -34,12 +35,13 @@ class OnboardingScreen extends StatelessWidget {
               },
             ),
             OnboardingPage(
-              title: 'Everything you need in one place',
+              title: 'Everything you\nneed in one\nplace',
               description:
               '“Pregnancy monitoring week by week”\n“Daily tips for child care”',
               imagePath: 'assets/images/family.png',
               buttonText: 'Continue',
-              isLast: false,
+              currentIndex: 1,
+              totalPages: 3,
               onButtonPressed: () {
                 pageController.nextPage(
                   duration: const Duration(milliseconds: 300),
@@ -48,14 +50,14 @@ class OnboardingScreen extends StatelessWidget {
               },
             ),
             OnboardingPage(
-              title: 'Get started now with Mamativity',
+              title: 'Get started now\nwith Mamativity',
               description:
-              'Create your account and enjoy an experience completely customized to your needs.',
+              'Create your account and enjoy an\nexperience completely customized\nto your needs.',
               imagePath: 'assets/images/mother_with_child.png',
               buttonText: 'Start now',
-              isLast: true,
+              currentIndex: 2,
+              totalPages: 3,
               onButtonPressed: () {
-                // Navigate to RegisterView
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => RegisterView()),

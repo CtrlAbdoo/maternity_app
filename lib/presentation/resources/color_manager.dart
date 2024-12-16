@@ -4,6 +4,7 @@ class ColorManager {
   static Color primary_font_color = const Color(0xff000000);
   static Color secondary_font_color = const Color(0xff625B60);
   static Color txtEditor_font_color = const Color(0xff322E31);
+  static Color grey_color = const Color(0xff4C4A4A);
   static const LinearGradient skyBlueGradient = LinearGradient(
     colors: [
       Color(0xffFFFFFF),
