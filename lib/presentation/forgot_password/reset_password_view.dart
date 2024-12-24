@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/login/login_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/validation.dart';
 
@@ -190,7 +191,12 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                               GestureDetector(
                                 onTap: () {
                                   if (_formKey.currentState?.validate() ?? false) {
-                                    // Add your action for the next button here
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const LoginView(),
+                                      ),
+                                    );
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(content: Text('Password reset successfully.')),
                                     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/Questions/q1.dart';
 import 'package:maternity_app/presentation/login/login_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/validation.dart';
@@ -232,7 +233,12 @@ class _RegisterViewState extends State<RegisterView> {
                                 onTap: () {
                                   if (_formKey.currentState?.validate() ??
                                       false) {
-                                    // Handle sign-up action
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Q1(),
+                                      ),
+                                    );
                                     print('Form is valid!');
                                   } else {
                                     print('Form is invalid!');
