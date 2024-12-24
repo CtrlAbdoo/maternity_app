@@ -3,9 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/forgot_password/forgot_password_view.dart';
 import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
+import 'package:maternity_app/validation.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
+
+  @override
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +25,6 @@ class LoginView extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        // Background Image
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/Sign_In.png'), // Replace with your image path
@@ -86,141 +96,159 @@ class LoginView extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
                   child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Email Field
-                        TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle: GoogleFonts.inriaSerif(
-                              textStyle: TextStyle(
-                                fontSize: screenWidth * 0.04,
-                                color: ColorManager.txtEditor_font_color,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Email Field
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: GoogleFonts.inriaSerif(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.04,
+                                  color: ColorManager.txtEditor_font_color,
+                                ),
+                              ),
+                            ),
+                            validator: InputValidator.validateEmail,
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // Password Field with Visibility Toggle
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: GoogleFonts.inriaSerif(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.04,
+                                  color: ColorManager.txtEditor_font_color,
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: InputValidator.validatePassword,
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // Forgot Password Link
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>  ForgotPasswordView(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                'Forgot Password?',
+                                style: GoogleFonts.inriaSerif(
+                                  textStyle: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: screenHeight * 0.04),
 
-                        // Password Field
-                        TextFormField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: GoogleFonts.inriaSerif(
-                              textStyle: TextStyle(
-                                fontSize: screenWidth * 0.04,
-                                color: ColorManager.txtEditor_font_color,
+                          // Sign In Button
+                          Row(
+                            children: [
+                              Text(
+                                'Sign in',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.inriaSerif(
+                                  textStyle: TextStyle(
+                                    fontSize: screenWidth * 0.06,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
-                            ),
-                            suffixIcon: const Icon(Icons.visibility_off),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    // Handle sign-in logic here
+                                  }
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFB6E8F8), // Light Blue
+                                        Color(0xFF90CAF9), // Sky Blue
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(screenWidth * 0.06),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: screenWidth * 0.06,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: screenHeight * 0.04),
 
-                        // Forgot Password Link
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
+                          // Sign Up Link
+                          GestureDetector(
                             onTap: () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const ForgotPasswordView(),
+                                  builder: (context) => RegisterView(),
                                 ),
                               );
                             },
-                            child: Text(
-                              'Forgot Password?',
-                              style: GoogleFonts.inriaSerif(
-                                textStyle: TextStyle(
-                                  fontSize: screenWidth * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  decoration: TextDecoration.underline,
-                                ),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: screenHeight * 0.05,
+                                horizontal: screenWidth * 0.04,
                               ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.04),
-
-                        // Sign In Button (Circular Arrow)
-                        Row(
-                          children: [
-                            // "Sign up" Text
-                            Text(
-                              'Sign in',
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.inriaSerif(
-                                textStyle: GoogleFonts.inriaSerif(textStyle:TextStyle(
-                                  fontSize: screenWidth * 0.06,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                ),
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            // Circular Button
-                            GestureDetector(
-                              onTap: () {
-                                // Handle sign-up action
-                              },
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xFFB6E8F8), // Light Blue
-                                      Color(0xFF90CAF9), // Sky Blue
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                              child: Text(
+                                'Sign Up',
+                                style: GoogleFonts.inriaSerif(
+                                  textStyle: TextStyle(
+                                    fontSize: screenWidth * 0.04,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
-                                padding: EdgeInsets.all(screenWidth * 0.06),
-                                child: Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.black,
-                                  size: screenWidth * 0.06,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.04),
-
-                        // Sign Up Link
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterView(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.05, horizontal: screenWidth * 0.04),
-                            child: Text(
-                              'Sign Up',
-                              style: GoogleFonts.inriaSerif(
-                                textStyle: TextStyle(
-                                  fontSize: screenWidth * 0.04,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  decoration: TextDecoration.underline,
-                                ),
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: screenHeight * 0.05),
-                      ],
+                          SizedBox(height: screenHeight * 0.05),
+                        ],
+                      ),
                     ),
                   ),
                 ),
