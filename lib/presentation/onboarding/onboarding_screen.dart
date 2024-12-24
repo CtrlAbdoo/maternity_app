@@ -58,7 +58,7 @@ class OnboardingScreen extends StatelessWidget {
               currentIndex: 2,
               totalPages: 3,
               onButtonPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RegisterView()),
                 );

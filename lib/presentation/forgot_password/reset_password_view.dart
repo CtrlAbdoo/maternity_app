@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
-import 'package:maternity_app/presentation/resources/font_manager.dart';
+import 'package:maternity_app/validation.dart';
 
-class ResetPasswordView extends StatelessWidget {
+class ResetPasswordView extends StatefulWidget {
   const ResetPasswordView({Key? key}) : super(key: key);
+
+  @override
+  State<ResetPasswordView> createState() => _ResetPasswordViewState();
+}
+
+class _ResetPasswordViewState extends State<ResetPasswordView> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +24,6 @@ class ResetPasswordView extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        // Background Image
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/Sign_In.png'), // Replace with your image asset
@@ -24,7 +34,6 @@ class ResetPasswordView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AppBar with Back Arrow, Logo, and Title
               AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -62,7 +71,6 @@ class ResetPasswordView extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.06),
 
-              // Title: Reset Your Password
               Center(
                 child: Text(
                   'Reset your password',
@@ -77,7 +85,6 @@ class ResetPasswordView extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.02),
 
-              // Subtitle
               Center(
                 child: Text(
                   'The password must be different\nthan before',
@@ -93,87 +100,127 @@ class ResetPasswordView extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.04),
 
-              // Form Section
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // New Password Field
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'New Password',
-                          labelStyle: GoogleFonts.inriaSerif(
-                            textStyle: TextStyle(
-                              fontSize: screenWidth * 0.04,
-                              color: ColorManager.txtEditor_font_color,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-
-                      // Confirm Password Field
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          labelStyle: GoogleFonts.inriaSerif(
-                            textStyle: TextStyle(
-                              fontSize: screenWidth * 0.04,
-                              color: ColorManager.txtEditor_font_color,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.3),
-
-                      // Next Button Row
-                      Row(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // "Next" Text
-                          Text(
-                            'Next',
-                            style: GoogleFonts.inriaSerif(
-                              textStyle: TextStyle(
-                                fontSize: screenWidth * 0.06,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-
-                          // Circular Button with Arrow
-                          GestureDetector(
-                            onTap: () {
-                              // Add your action for the next button here
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFFB6E8F8), // Light Blue
-                                    Color(0xFF90CAF9), // Sky Blue
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
+                          // New Password Field
+                          TextFormField(
+                            controller: _newPasswordController,
+                            obscureText: !_isNewPasswordVisible,
+                            decoration: InputDecoration(
+                              labelText: 'New Password',
+                              labelStyle: GoogleFonts.inriaSerif(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.04,
+                                  color: ColorManager.txtEditor_font_color,
                                 ),
                               ),
-                              padding: EdgeInsets.all(screenWidth * 0.06),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.black,
-                                size: screenWidth * 0.06,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isNewPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isNewPasswordVisible = !_isNewPasswordVisible;
+                                  });
+                                },
                               ),
                             ),
+                            validator: (value) => InputValidator.validatePassword(value),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+
+                          // Confirm Password Field
+                          TextFormField(
+                            controller: _confirmPasswordController,
+                            obscureText: !_isConfirmPasswordVisible,
+                            decoration: InputDecoration(
+                              labelText: 'Confirm Password',
+                              labelStyle: GoogleFonts.inriaSerif(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.04,
+                                  color: ColorManager.txtEditor_font_color,
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isConfirmPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value != _newPasswordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: screenHeight * 0.3),
+
+                          Row(
+                            children: [
+                              Text(
+                                'Next',
+                                style: GoogleFonts.inriaSerif(
+                                  textStyle: TextStyle(
+                                    fontSize: screenWidth * 0.06,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState?.validate() ?? false) {
+                                    // Add your action for the next button here
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Password reset successfully.')),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFB6E8F8), // Light Blue
+                                        Color(0xFF90CAF9), // Sky Blue
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(screenWidth * 0.06),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: screenWidth * 0.06,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),

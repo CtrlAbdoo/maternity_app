@@ -21,11 +21,11 @@ class RouteGenerator {
       case Routes.splashRoute:
         return MaterialPageRoute(builder: (_) => SplashScreen());
        case Routes.loginRoute:
-        return MaterialPageRoute(builder: (_) => const LoginView());
+        return MaterialPageRoute(builder: (_) => LoginView());
        case Routes.registerRoute:
-         return MaterialPageRoute(builder: (_) => const RegisterView());
+         return MaterialPageRoute(builder: (_) => RegisterView());
        case Routes.forgotPasswordRoute:
-         return MaterialPageRoute(builder: (_) => const ForgotPasswordView());
+         return MaterialPageRoute(builder: (_) =>  ForgotPasswordView());
       case Routes.ResetPasswordRoute:
         return MaterialPageRoute(builder: (_) => const ResetPasswordView());
       default:

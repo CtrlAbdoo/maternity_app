@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/presentation/resources/font_manager.dart';
 import 'package:maternity_app/presentation/resources/values_manager.dart';
@@ -110,7 +111,9 @@ class OnboardingPage extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Example: Go back
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterView()));// Example: Go back
                   },
                   child: Text(
                     'Skip',
