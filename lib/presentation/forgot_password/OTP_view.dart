@@ -61,7 +61,7 @@ class _VerificationCodeViewState extends State<VerificationCodeView> {
   }
 
   void _onNext() {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const ResetPasswordView(),

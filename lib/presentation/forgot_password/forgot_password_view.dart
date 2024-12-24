@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/forgot_password/OTP_view.dart';
-import 'package:maternity_app/presentation/forgot_password/reset_password_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
+import 'package:maternity_app/validation.dart';
 
 class ForgotPasswordView extends StatelessWidget {
-  const ForgotPasswordView({Key? key}) : super(key: key);
+  ForgotPasswordView({Key? key}) : super(key: key);
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +17,9 @@ class ForgotPasswordView extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        // Background Image
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Sign_In.png'), // Replace with your image
+            image: AssetImage('assets/images/Sign_In.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -25,7 +27,6 @@ class ForgotPasswordView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AppBar with Back Arrow, Logo, and Title
               AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -43,7 +44,7 @@ class ForgotPasswordView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/images/logo2.png', // Replace with your logo path
+                      'assets/images/logo2.png',
                       height: screenHeight * 0.08,
                       width: screenWidth * 0.1,
                     ),
@@ -61,10 +62,7 @@ class ForgotPasswordView extends StatelessWidget {
                   ],
                 ),
               ),
-
               SizedBox(height: screenHeight * 0.06),
-
-              // Title: Forget Password
               Center(
                 child: Text(
                   'Forget Password',
@@ -78,8 +76,6 @@ class ForgotPasswordView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
-
-              // Subtitle
               Center(
                 child: Text(
                   textAlign: TextAlign.center,
@@ -94,78 +90,81 @@ class ForgotPasswordView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: screenHeight * 0.04),
-
-              // Form Section
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      // Email Field
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          labelStyle: GoogleFonts.inriaSerif(
-                            textStyle: TextStyle(
-                              fontSize: screenWidth * 0.04,
-                              color: ColorManager.txtEditor_font_color,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.3),
-
-                      // Next Button Row
-                      Row(
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // "Next" Text
-                          Text(
-                            'Next',
-                            style: GoogleFonts.inriaSerif(
-                              textStyle: TextStyle(
-                                fontSize: screenWidth * 0.06,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                          TextFormField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: GoogleFonts.inriaSerif(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.04,
+                                  color: ColorManager.txtEditor_font_color,
+                                ),
                               ),
                             ),
+                            validator: (value) =>
+                                InputValidator.validateEmail(value),
                           ),
-
-                          const Spacer(),
-
-                          // Circular Button with Arrow
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const VerificationCodeView(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xFFB6E8F8), // Light Blue
-                                    Color(0xFF90CAF9), // Sky Blue
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
+                          SizedBox(height: screenHeight * 0.3),
+                          Row(
+                            children: [
+                              Text(
+                                'Next',
+                                style: GoogleFonts.inriaSerif(
+                                  textStyle: TextStyle(
+                                    fontSize: screenWidth * 0.06,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                              padding: EdgeInsets.all(screenWidth * 0.06),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                color: Colors.black,
-                                size: screenWidth * 0.06,
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                        const VerificationCodeView(),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Color(0xFFB6E8F8),
+                                        Color(0xFF90CAF9),
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  padding: EdgeInsets.all(screenWidth * 0.06),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.black,
+                                    size: screenWidth * 0.06,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
