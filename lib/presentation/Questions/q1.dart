@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/Questions/q2.dart';
 
 class Q1 extends StatefulWidget {
   @override
@@ -19,14 +20,22 @@ class _Q1State extends State<Q1> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Child history"),
-        content: Text("The selected date of birth is: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}"),
+        content: Text(
+            "The selected date of birth is: ${selectedDate.year}-${selectedDate.month}-${selectedDate.day}"),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text("Change"),
           ),
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Q2(),
+                ),
+              );
+            },
             child: const Text("Sure"),
           ),
         ],
@@ -87,8 +96,8 @@ class _Q1State extends State<Q1> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF965391).withOpacity(
-                      isYesSelected ? 1.0 : 0.59),
+                  backgroundColor:
+                      Color(0xFF965391).withOpacity(isYesSelected ? 1.0 : 0.59),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(25),
                   ),
@@ -116,8 +125,8 @@ class _Q1State extends State<Q1> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF965391).withOpacity(
-                    isNoSelected ? 1.0 : 0.59),
+                backgroundColor:
+                    Color(0xFF965391).withOpacity(isNoSelected ? 1.0 : 0.59),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
@@ -166,7 +175,7 @@ class _Q1State extends State<Q1> {
                             },
                             children: List.generate(
                               100,
-                                  (index) => Center(
+                              (index) => Center(
                                 child: Text(
                                   "${DateTime.now().year - index}",
                                   style: GoogleFonts.inriaSerif(
@@ -191,7 +200,7 @@ class _Q1State extends State<Q1> {
                             },
                             children: List.generate(
                               12,
-                                  (index) => Center(
+                              (index) => Center(
                                 child: Text(
                                   "${index + 1}",
                                   style: GoogleFonts.inriaSerif(
@@ -216,7 +225,7 @@ class _Q1State extends State<Q1> {
                             },
                             children: List.generate(
                               31,
-                                  (index) => Center(
+                              (index) => Center(
                                 child: Text(
                                   "${index + 1}",
                                   style: GoogleFonts.inriaSerif(
