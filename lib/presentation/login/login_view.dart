@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/Questions/q1.dart';
 import 'package:maternity_app/presentation/forgot_password/forgot_password_view.dart';
 import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
@@ -191,7 +192,12 @@ class _LoginViewState extends State<LoginView> {
                               GestureDetector(
                                 onTap: () {
                                   if (_formKey.currentState!.validate()) {
-                                    // Handle sign-in logic here
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Q1(),
+                                      ),
+                                    );
                                   }
                                 },
                                 child: Container(

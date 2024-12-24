@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:maternity_app/presentation/Questions/q1.dart';
 import 'package:maternity_app/presentation/forgot_password/forgot_password_view.dart';
 import 'package:maternity_app/presentation/forgot_password/reset_password_view.dart';
 import 'package:maternity_app/presentation/login/login_view.dart';
@@ -12,6 +13,7 @@ class Routes {
   static const String registerRoute = "/register";
   static const String forgotPasswordRoute = "/forgotPassword";
   static const String ResetPasswordRoute = "/ResetPassword";
+  static const String Q1 = "/Q1";
 
 }
 
@@ -28,6 +30,8 @@ class RouteGenerator {
          return MaterialPageRoute(builder: (_) =>  ForgotPasswordView());
       case Routes.ResetPasswordRoute:
         return MaterialPageRoute(builder: (_) => const ResetPasswordView());
+      case Routes.Q1:
+        return MaterialPageRoute(builder: (_) =>  Q1());
       default:
         return unDefinedRoute();
     }
