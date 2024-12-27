@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "151382857029",
+    "project_id": "mama-tivity-78154",
+    "storage_bucket": "mama-tivity-78154.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:151382857029:android:f72f122105fef434969a2c",
+        "android_client_info": {
+          "package_name": "com.mama.tivity_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_bIcJlve05trytYUMJ726tfU3x5VJP9Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,10 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/login/login_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/presentation/resources/font_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterView extends StatelessWidget {
   const RegisterView({Key? key}) : super(key: key);
-
+  late String email;
+  late String password;
+  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +126,9 @@ class RegisterView extends StatelessWidget {
 
                             // Email Field
                             TextFormField(
+                              onChanged : (value) {
+                                email = value;
+                              },
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 border: const UnderlineInputBorder(),
@@ -134,6 +140,9 @@ class RegisterView extends StatelessWidget {
 
                             // Password Field
                             TextFormField(
+                              onChanged : (value) {
+                                password = value;
+                              },
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Password',
@@ -161,8 +170,15 @@ class RegisterView extends StatelessWidget {
                               children: [
                                 const Spacer(),
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async{
                                     // Handle sign up action
+                                    try{
+                                      var user= await auth.createUserWithEmailAndPassword(
+                                      email:email, password:password);
+                                      Navigator.push(context,MaterialPageRoute(builder:(context)=>onboarding_view(),));
+                                    } catch(e) {
+                                      print(e);
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(

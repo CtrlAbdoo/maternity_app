@@ -1,12 +1,71 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/forgot_password/forgot_password_view.dart';
 import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/presentation/resources/font_manager.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class LoginView extends StatelessWidget {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyDzMZudRySjN_QOMxxgM7iPFjRzuLIjDzo",
+      authDomain: "mama-tivity-78154.firebaseapp.com",
+      projectId: "mama-tivity-78154",
+      storageBucket: "mama-tivity-78154.firebasestorage.app",
+      messagingSenderId: "151382857029",
+      appId: "1:151382857029:web:0ff0c9382d7cea88969a2c",
+      measurementId: "G-H3DBGF81RD",
+    ),
+  );
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: LoginView(),
+    );
+  }
+}
+
+class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
+
+  @override
+  _LoginViewState createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late String email;
+  late String password;
+  String? _errorMessage;
+
+  // Sign-in method using Firebase Authentication
+  Future<void> _signIn() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // Navigate to another screen on successful login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterView()), // Replace with your home screen
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,23 +156,31 @@ class LoginView extends StatelessWidget {
                           children: [
                             // Email Field
                             TextFormField(
+                              onChanged:(value) {
+                                email=value;
+                              }
+                              controller: _emailController,
                               decoration: InputDecoration(
                                 labelText: 'Email',
                                 border: const UnderlineInputBorder(),
                                 contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12),
+                                    const EdgeInsets.symmetric(horizontal: 12),
                               ),
                             ),
                             const SizedBox(height: 16),
 
                             // Password Field
                             TextFormField(
+                              onChanged :(value){
+                                password=value;
+                              }
+                              controller: _passwordController,
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: 'Password',
                                 border: const UnderlineInputBorder(),
                                 contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12),
+                                    const EdgeInsets.symmetric(horizontal: 12),
                                 suffixIcon: Icon(Icons.visibility_off),
                               ),
                             ),
@@ -149,8 +216,16 @@ class LoginView extends StatelessWidget {
                               children: [
                                 const Spacer(),
                                 GestureDetector(
-                                  onTap: () {
-                                    // Handle sign in action
+                                  onTap: () async {
+                                    try {
+                                      var user = await auth.signInWithEmailAndPassword(
+                                        email:email , password:password);
+                                        if(user!=null){
+                                          Navigator.push(context,MaterialPageRoute(builder:(context)=>register_view(),));
+                                        }
+                                    }catch (e) {
+                                      print (e);
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -196,6 +271,16 @@ class LoginView extends StatelessWidget {
                                 ),
                               ),
                             ),
+
+                            // Display Error Message
+                            if (_errorMessage != null) 
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  _errorMessage!,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
                           ],
                         ),
                       ),
