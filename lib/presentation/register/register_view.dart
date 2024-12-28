@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:maternity_app/presentation/Questions/q1.dart';
 import 'package:maternity_app/presentation/login/login_view.dart';
+import 'package:maternity_app/presentation/onboarding/onboarding_screen.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+  RegisterView({Key? key}) : super(key: key);
 
   @override
   _RegisterViewState createState() => _RegisterViewState();
@@ -23,10 +24,8 @@ class _RegisterViewState extends State<RegisterView> {
   final TextEditingController _phoneController = TextEditingController();
 
   bool _isPasswordVisible = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late String email;
-  late String password;
-  final auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -34,10 +33,9 @@ class _RegisterViewState extends State<RegisterView> {
 
     return Scaffold(
       body: Container(
-        // Background Image
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Sign_Up.png'), // Replace with your image path
+            image: AssetImage('assets/images/Sign_Up.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -45,25 +43,21 @@ class _RegisterViewState extends State<RegisterView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // AppBar with Back Arrow, Logo, and Title
               AppBar(
-                backgroundColor: Colors.transparent, // Transparent AppBar
-                elevation: 0, // Remove shadow
-                centerTitle: true, // Center the title content
-                leading: GestureDetector(
-                  onTap: () {
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.black),
+                  onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_sharp,
-                    color: Colors.black,
-                  ),
                 ),
                 title: Row(
-                  mainAxisSize: MainAxisSize.min, // Use minimum space for the row content
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Image.asset(
-                      'assets/images/logo2.png', // Replace with your logo path
+                      'assets/images/logo2.png',
                       height: screenHeight * 0.08,
                       width: screenWidth * 0.1,
                     ),
@@ -81,8 +75,6 @@ class _RegisterViewState extends State<RegisterView> {
                   ],
                 ),
               ),
-
-              // Title: Create Account
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.08,
@@ -100,8 +92,6 @@ class _RegisterViewState extends State<RegisterView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
-
-              // Form Section
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
@@ -111,7 +101,6 @@ class _RegisterViewState extends State<RegisterView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // First Name and Last Name
                           Row(
                             children: [
                               Expanded(
@@ -126,8 +115,7 @@ class _RegisterViewState extends State<RegisterView> {
                                       ),
                                     ),
                                   ),
-                                  validator: (value) =>
-                                      InputValidator.validateName(value),
+                                  validator: InputValidator.validateName,
                                 ),
                               ),
                               SizedBox(width: screenWidth * 0.04),
@@ -143,15 +131,12 @@ class _RegisterViewState extends State<RegisterView> {
                                       ),
                                     ),
                                   ),
-                                  validator: (value) =>
-                                      InputValidator.validateName(value),
+                                  validator: InputValidator.validateName,
                                 ),
                               ),
                             ],
                           ),
                           SizedBox(height: screenHeight * 0.02),
-
-                          // Email Field
                           TextFormField(
                             controller: _emailController,
                             decoration: InputDecoration(
@@ -161,30 +146,14 @@ class _RegisterViewState extends State<RegisterView> {
                                   fontSize: screenWidth * 0.04,
                                   color: ColorManager.txtEditor_font_color,
                                 ),
-                            // Email Field
-                            TextFormField(
-                              onChanged : (value) {
-                                email = value;
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                                border: const UnderlineInputBorder(),
-                                contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 12),
                               ),
                             ),
-                            validator: (value) =>
-                                InputValidator.validateEmail(value),
+                            validator: InputValidator.validateEmail,
                           ),
                           SizedBox(height: screenHeight * 0.02),
-
-                          // Password Field with Visibility Toggle
                           TextFormField(
                             controller: _passwordController,
-                            onChanged : (value) {
-                                password = value;
-                              },
-                              obscureText: !_isPasswordVisible,
+                            obscureText: !_isPasswordVisible,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               labelStyle: GoogleFonts.inriaSerif(
@@ -204,14 +173,14 @@ class _RegisterViewState extends State<RegisterView> {
                                     _isPasswordVisible = !_isPasswordVisible;
                                   });
                                 },
+                                tooltip: _isPasswordVisible
+                                    ? 'Hide Password'
+                                    : 'Show Password',
                               ),
                             ),
-                            validator: (value) =>
-                                InputValidator.validatePassword(value),
+                            validator: InputValidator.validatePassword,
                           ),
                           SizedBox(height: screenHeight * 0.02),
-
-                          // Phone Field
                           TextFormField(
                             controller: _phoneController,
                             decoration: InputDecoration(
@@ -223,107 +192,50 @@ class _RegisterViewState extends State<RegisterView> {
                                 ),
                               ),
                             ),
-                            validator: (value) =>
-                                InputValidator.validatePhoneNumber(value),
+                            validator: InputValidator.validatePhoneNumber,
                           ),
                           SizedBox(height: screenHeight * 0.04),
-
-                          // Sign-Up Button (Circular Arrow)
-                          Row(
-                            children: [
-                              // "Sign up" Text
-                              Text(
-                                'Sign up',
-                                textAlign: TextAlign.start,
-                                style: GoogleFonts.inriaSerif(
-                                  textStyle: TextStyle(
-                                    fontSize: screenWidth * 0.06,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-
-                              // Circular Button
-                              GestureDetector(
-                                onTap: () {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Q1(),
-                                      ),
-                                    );
-                                    print('Form is valid!');
-                                  } else {
-                                    print('Form is invalid!');
-                                  }
-                                },
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: LinearGradient(
-                                      colors: [
-                                        Color(0xFFB6E8F8), // Light Blue
-                                        Color(0xFF90CAF9), // Sky Blue
-                                      ],
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.all(screenWidth * 0.06),
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.black,
-                                    size: screenWidth * 0.06,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                            // Sign Up Button
-                            Row(
-                              children: [
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () async{
-                                    // Handle sign up action
-                                    try{
-                                      var user= await auth.createUserWithEmailAndPassword(
-                                      email:email, password:password);
-                                      Navigator.push(context,MaterialPageRoute(builder:(context)=>onboarding_view(),));
-                                    } catch(e) {
-                                      print(e);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xFFB6E8F8), // Light blue
-                                          Color(0xFF90CAF9), // Sky blue
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.all(20),
-                                    child: Icon(
-                                      Icons.arrow_forward_sharp,
-                                      color: ColorManager.primary_font_color,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                          SizedBox(height: screenHeight * 0.07),
-
-                          // Sign-In Link
                           GestureDetector(
+                            onTap: () async {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                try {
+                                  await _auth.createUserWithEmailAndPassword(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => OnboardingScreen()),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error: $e')),
+                                  );
+                                }
+                              }
+                            },
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFB6E8F8),
+                                    Color(0xFF90CAF9),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              padding: EdgeInsets.all(screenWidth * 0.06),
+                              child: Icon(
+                                Icons.arrow_forward,
+                                color: Colors.black,
+                                size: screenWidth * 0.06,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.07),
+                          InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,

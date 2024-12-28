@@ -25,7 +25,7 @@ class RouteGenerator {
        case Routes.loginRoute:
         return MaterialPageRoute(builder: (_) => LoginView());
        case Routes.registerRoute:
-         return MaterialPageRoute(builder: (_) => RegisterView());
+         return MaterialPageRoute(builder: (_) =>  RegisterView());
        case Routes.forgotPasswordRoute:
          return MaterialPageRoute(builder: (_) =>  ForgotPasswordView());
       case Routes.ResetPasswordRoute:
