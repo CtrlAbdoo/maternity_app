@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/resources/color_manager.dart';
 import 'package:maternity_app/presentation/resources/font_manager.dart';
 import 'package:maternity_app/presentation/resources/values_manager.dart';
@@ -8,7 +10,8 @@ class OnboardingPage extends StatelessWidget {
   final String description;
   final String imagePath;
   final String buttonText;
-  final bool isLast;
+  final int currentIndex;
+  final int totalPages;
   final VoidCallback onButtonPressed;
 
   const OnboardingPage({
@@ -17,75 +20,83 @@ class OnboardingPage extends StatelessWidget {
     required this.description,
     required this.imagePath,
     required this.buttonText,
-    required this.isLast,
+    required this.currentIndex,
+    required this.totalPages,
     required this.onButtonPressed,
   }) : super(key: key);
 
+  // Inside the OnboardingPage class
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    final double screenHeight = mediaQuery.size.height;
+    final double screenWidth = mediaQuery.size.width;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
       child: Column(
         children: [
-          const Spacer(),
-
-          // Progress Indicator
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (int i = 0; i < 3; i++)
-                Container(
-                  height: 4,
-                  width: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: isLast
-                        ? (i == 0 ? Colors.blue : Colors.grey.shade300) // Last page
-                        : (i == 1 && isLast)
-                        ? Colors.blue // First page active
-                        : (i == 2 && isLast)
-                        ? Colors.blue // Second page active
-                        : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
+          // Progress Indicator Row at the Top
+          Container(
+            width: double.infinity, // Makes the Row take full width
+            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.06),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Spread children
+              children: List.generate(totalPages, (index) {
+                return Expanded(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: 6,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: currentIndex == index
+                          ? Color(0xFF89DDF7)
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
-                ),
-            ],
+                );
+              }),
+            ),
           ),
 
-
-          const SizedBox(height: AppSize.s20),
-
-          // Title
+          // Title (Bigger but Responsive)
           Text(
             title,
-            style: TextStyle(
-              fontSize: FontSize.s22,
-              fontWeight: FontWeightManager.bold,
-              fontFamily: FontConstants.fontFamily,
-              color: ColorManager.primary_font_color,
+            style: GoogleFonts.inriaSerif(
+              textStyle: TextStyle(
+                fontSize: screenWidth * 0.075, // Increased font size
+                fontWeight: FontWeightManager.bold,
+                fontFamily: FontConstants.fontFamily,
+                color: ColorManager.primary_font_color,
+              ),
             ),
             textAlign: TextAlign.center,
           ),
 
-          const SizedBox(height: AppSize.s20),
+          SizedBox(height: screenHeight * 0.04),
 
-          // Image
+          // Image (Increased Size)
           Image.asset(
             imagePath,
-            height: 250,
-            fit: BoxFit.cover,
+            height: screenHeight * 0.38, // Increased height
+            width: screenWidth * 0.88, // Slightly increased width
+            fit: BoxFit.contain,
           ),
 
-          const SizedBox(height: AppSize.s12),
+          SizedBox(height: screenHeight * 0.04),
 
-          // Description
+          // Description (Bigger but Responsive)
           Text(
             description,
-            style: TextStyle(
-              fontSize: FontSize.s16,
-              fontWeight: FontWeightManager.regular,
-              fontFamily: FontConstants.fontFamily,
-              color: ColorManager.secondary_font_color,
+            style: GoogleFonts.inriaSerif(
+              textStyle: TextStyle(
+                fontSize: screenWidth * 0.045, // Increased font size
+                fontWeight: FontWeightManager.regular,
+                fontFamily: FontConstants.fontFamily,
+                color: ColorManager.secondary_font_color,
+              ),
             ),
             textAlign: TextAlign.center,
           ),
@@ -94,43 +105,49 @@ class OnboardingPage extends StatelessWidget {
 
           // Buttons
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppPadding.p16),
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Example: Go back
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RegisterView()));// Example: Go back
                   },
                   child: Text(
                     'Skip',
-                    style: TextStyle(
-                      fontSize: FontSize.s16,
-                      fontWeight: FontWeightManager.medium,
-                      fontFamily: FontConstants.fontFamily,
-                      color: ColorManager.txtEditor_font_color,
+                    style: GoogleFonts.inriaSerif(
+                      textStyle: TextStyle(
+                        fontSize: screenWidth * 0.04,
+                        fontWeight: FontWeightManager.medium,
+                        color: ColorManager.grey_color,
+                      ),
                     ),
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: onButtonPressed, // Use the passed callback
+                  onPressed: onButtonPressed,
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppPadding.p20,
-                      vertical: AppPadding.p12,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.06,
+                      vertical: screenHeight * 0.015,
                     ),
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.white,
+                    elevation: 5,
+                    shadowColor: Colors.blue.withOpacity(0.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   child: Text(
                     buttonText,
-                    style: TextStyle(
-                      fontSize: FontSize.s16,
-                      fontWeight: FontWeightManager.bold,
-                      fontFamily: FontConstants.fontFamily,
-                      color: Colors.white,
+                    style: GoogleFonts.inriaSerif(
+                      textStyle: TextStyle(
+                        fontSize: screenWidth * 0.05,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -138,7 +155,7 @@ class OnboardingPage extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: AppSize.s20),
+          SizedBox(height: screenHeight * 0.04),
         ],
       ),
     );

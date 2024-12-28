@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:maternity_app/presentation/forgot_password/forgot_password_view.dart';
-import 'package:maternity_app/presentation/forgot_password/reset_password_view.dart';
-import 'package:maternity_app/presentation/login/login_view.dart';
-import 'package:maternity_app/presentation/onboarding/onboarding_screen.dart';
-import 'package:maternity_app/presentation/register/register_view.dart';
 import 'package:maternity_app/presentation/splash/splash_view.dart';
 
 
